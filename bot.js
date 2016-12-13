@@ -9,28 +9,6 @@ var exec = require('child_process').exec;
 
 console.log("Avvio...");
 
-function logger(up) {
-  if (typeof up.message != 'undefined') {
-    function log( /**/ ) {
-      var args = arguments;
-      var data = "";
-      for (var i = 0; i < args.length; i++) {
-        data += args[i] + "\t";
-      }
-      fs.appendFile('logs/' + up.message.chat.id + '.log', data + "\n", function (err) {});
-    }
-
-    if (typeof up.message.text != 'undefined') {
-      log("message", up.message.date, up.message.from.id, up.message.from.first_name, up.message.text);
-    } else if (typeof up.message.sticker != 'undefined') {
-      log("sticker", up.message.date, up.message.from.id, up.message.from.first_name, up.message.sticker.emoji);
-    } else if (typeof up.message.photo != 'undefined') {
-      log("photo", up.message.date, up.message.from.id, up.message.from.first_name);
-    }
-  }
-}
-
-
 bot.init(process.argv[2], 3002);
 
 
@@ -181,8 +159,3 @@ bot.registerAdminCmd("!cc", (mess) => {
     });
   }
 });
-
-
-bot.onUpdate(function (up) {
-  logger(up)
-})
