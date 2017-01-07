@@ -159,3 +159,6 @@ bot.registerAdminCmd("!cc", (mess) => {
     });
   }
 });
+
+bot.onUpdate(function (up) {
+});
