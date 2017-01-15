@@ -3,7 +3,7 @@
 
 var fs = require("fs");
 
-var bot = require("./kbot.js");
+var bot = require("kbot");
 var exec = require('child_process').exec;
 
 
