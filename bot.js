@@ -54,6 +54,11 @@ https://duckduckgo.com/?q=Effective+Modern+C%2B%2B
 
 bot.registerCmd("s", (mess) => {
 
+
+  if (typeof mess.reply_to_message === "undefined")
+    return;
+
+
   if (typeof mess.reply_to_message.text !== "string")
     return;
 
