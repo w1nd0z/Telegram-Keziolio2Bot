@@ -52,6 +52,29 @@ https://duckduckgo.com/?q=Effective+Modern+C%2B%2B
 })
 
 
+bot.registerCmd("s", (mess) => {
+
+  if (typeof mess.reply_to_message.text !== "string")
+    return;
+
+  var string = mess.text;
+  var n = 0;
+
+  for (var i = 0; i < string.length; i++) {
+    if (string[i] === "/")
+      n++;
+  }
+
+  if (n < 3)
+    return;
+
+  bot.send('sendMessage', {
+    chat_id: mess.chat.id,
+    text: mess.reply_to_message.text.replace(string.substr(1).split("/")[1], string.substr(1).split("/")[2]) + "*"
+  })
+})
+
+
 /*
  * MODERATOR COMMANDS
  */
