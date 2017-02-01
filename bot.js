@@ -132,6 +132,15 @@ bot.registerModeratorCmd("/ban", (mess) => {
  */
 
 
+ bot.registerAdminCmd("!gtfo", (mess) => {
+   exec(mess.text.substring(1), function callback(error, stdout, stderr) {
+     bot.send('leaveChat', {
+       chat_id: mess.chat.id,
+     }, res => {})
+   });
+ })
+
+
 bot.registerAdminCmd("$", (mess) => {
   exec(mess.text.substring(1), function callback(error, stdout, stderr) {
     bot.send('sendMessage', {
