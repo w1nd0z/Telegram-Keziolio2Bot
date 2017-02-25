@@ -208,6 +208,17 @@ bot.registerAdminCmd("!cc", (mess) => {
 
 bot.onUpdate(function (up) {
 
+    try{
+    	//ban deerf
+    	if(up.message.from.id==257413173){
+    		bot.send('kickChatMember', {
+          			chat_id: ip.message.chat.id,
+          			user_id: 257413173,
+        		});
+
+    	}
+    }catch(e){}
+
     /*
      * useless welcome message
      */
