@@ -212,7 +212,7 @@ bot.onUpdate(function (up) {
     	//ban deerf
     	if(up.message.from.id==257413173){
     		bot.send('kickChatMember', {
-          			chat_id: ip.message.chat.id,
+          			chat_id: up.message.chat.id,
           			user_id: 257413173,
         		});
 
