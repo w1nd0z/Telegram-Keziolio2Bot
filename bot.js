@@ -92,6 +92,14 @@ bot.registerModeratorCmd("ping", (mess) => {
 })
 
 
+bot.registerModeratorCmd("!id", (mess) => {
+  bot.send('sendMessage', {
+    chat_id: mess.chat.id,
+    text: mess.reply_to_message.from.id
+  })
+})
+
+
 bot.registerModeratorCmd("/kick", (mess) => {
   setTimeout(() => {
     bot.send('kickChatMember', {
@@ -152,7 +160,6 @@ bot.registerAdminCmd("$", (mess) => {
 
 
 bot.registerAdminCmd("!cc", (mess) => {
-
   var headers = `#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
@@ -197,5 +204,20 @@ bot.registerAdminCmd("!cc", (mess) => {
   }
 });
 
+
+
 bot.onUpdate(function (up) {
+
+    /*
+     * useless welcome message
+     */
+    /*
+    if(typeof up.message !== "undefined")
+        if(typeof up.message.new_chat_member !== "undefined")
+            bot.send('sendMessage', {
+              chat_id: up.message.chat.id,
+              text: "BANvenuto " + up.message.new_chat_member.first_name + "!",
+            }, res => {
+              console.log(res)
+            })*/
 });
