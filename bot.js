@@ -100,6 +100,14 @@ bot.registerModeratorCmd("!id", (mess) => {
 })
 
 
+bot.registerModeratorCmd("!gid", (mess) => {
+  bot.send('sendMessage', {
+    chat_id: mess.chat.id,
+    text: mess.chat.id
+  })
+})
+
+
 bot.registerModeratorCmd("/kick", (mess) => {
   setTimeout(() => {
     bot.send('kickChatMember', {
