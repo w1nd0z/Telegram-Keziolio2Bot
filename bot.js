@@ -9,7 +9,7 @@ var exec = require('child_process').exec;
 
 console.log("Avvio...");
 
-bot.init(process.argv[2], 3002);
+bot.init(process.argv[2]);
 
 
 bot.registerCmd("/part", (mess) => {
@@ -206,18 +206,4 @@ bot.registerAdminCmd("!cc", (mess) => {
 
 
 
-bot.onUpdate(function (up) {
-
-    /*
-     * useless welcome message
-     */
-    /*
-    if(typeof up.message !== "undefined")
-        if(typeof up.message.new_chat_member !== "undefined")
-            bot.send('sendMessage', {
-              chat_id: up.message.chat.id,
-              text: "BANvenuto " + up.message.new_chat_member.first_name + "!",
-            }, res => {
-              console.log(res)
-            })*/
-});
+bot.start();
