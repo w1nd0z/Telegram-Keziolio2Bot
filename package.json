@@ -4,7 +4,7 @@
   "description": "",
   "main": "bot.js",
   "dependencies": {
-    "kbot": "^1.0.2"
+    "kbot": "*"
   },
   "devDependencies": {},
   "scripts": {
