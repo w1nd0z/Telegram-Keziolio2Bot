@@ -328,7 +328,7 @@ bot.start((upd) =>{
         }, res => {})
         return;
     }
-    if(upd.message.text.toLowerCase().indexOf("@ignuranzafork") !== -1 ||upd.message.text.toLowerCase().indexOf("t.me/ignuranzafork") !== -1 ){
+    if(upd.message.text && ( upd.message.text.toLowerCase().indexOf("@ignuranzafork") !== -1 ||upd.message.text.toLowerCase().indexOf("t.me/ignuranzafork") !== -1 )){
         bot.send('deleteMessage', {
         chat_id: upd.message.chat.id,
         message_id: upd.message.message_id
