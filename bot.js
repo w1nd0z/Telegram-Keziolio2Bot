@@ -1,5 +1,5 @@
 var fs = require("fs");
-
+const path = require('path');
 var bot = require("./kbot.js");
 var iata = require("./iata.js");
 
@@ -16,6 +16,7 @@ var tkn = fs.readFileSync(path.resolve(__dirname, 'token'), 'utf8');
 
 bot.init(tkn.trim());
 
+bot.send('setWebhook', { url:""}); // disable webhooks
 
 
 bot.registerCmd("/part", (mess) => {
