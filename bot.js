@@ -313,6 +313,8 @@ bot.registerAdminCmd("!cc", (mess) => {
 
 
 bot.start((upd) =>{
+    
+    try {
     if(upd.message.new_chat_members){
         upd.message.new_chat_members.forEach((member)=>{
             printFlags(member, upd.message.chat.id)
@@ -334,6 +336,9 @@ bot.start((upd) =>{
         message_id: upd.message.message_id
         }, res => {})
         return;
+    }
+    } catch(err){
+        console.log(err)
     }
     
     
