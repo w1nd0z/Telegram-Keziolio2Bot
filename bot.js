@@ -1,15 +1,21 @@
-"use strict";
-
-
 var fs = require("fs");
 
-var bot = require("kbot");
+var bot = require("./kbot.js");
+var iata = require("./iata.js");
+
+
+iata.init();
+
 var exec = require('child_process').exec;
 
 
 console.log("Avvio...");
 
-bot.init(process.argv[2]);
+
+var tkn = fs.readFileSync(path.resolve(__dirname, 'token'), 'utf8');
+
+bot.init(tkn.trim());
+
 
 
 bot.registerCmd("/part", (mess) => {
@@ -34,22 +40,16 @@ bot.registerCmd("/me", (mess) => {
       chat_id: mess.chat.id,
       text: "-*- " + mess.from.first_name + " " + mess.text.substring(4)
     }, res => {})
+    
+    bot.send('deleteMessage', {
+      chat_id: mess.chat.id,
+      message_id: mess.message_id
+    }, res => {})
+    
   }
 })
 
 
-bot.registerCmd("!libri", (mess) => {
-  bot.send('sendMessage', {
-    chat_id: mess.chat.id,
-    text: `
-https://en.wikibooks.org/wiki/X86_Assembly
-https://en.wikibooks.org/wiki/C_Programming
-https://en.wikibooks.org/wiki/C%2B%2B_Programming
-http://www.ioprogrammo.it/index.php?topic=14799.0
-https://duckduckgo.com/?q=Effective+Modern+C%2B%2B
-`
-  })
-})
 
 
 bot.registerCmd("s", (mess) => {
@@ -132,28 +132,125 @@ bot.registerModeratorCmd("/ban", (mess) => {
     bot.send('kickChatMember', {
       chat_id: mess.chat.id,
       user_id: mess.reply_to_message.from.id
+    }).then((upd)=>{
+        if(upd.ok)
+            bot.send('sendMessage', {
+                chat_id: mess.chat.id,
+                text: mess.reply_to_message.from.first_name + ' è stato terminato.'
+            })
+        else
+            bot.send('sendMessage', {
+                chat_id: mess.chat.id,
+                text: mess.reply_to_message.from.first_name + ' non è stato terminato.\n' + upd.description
+            })    
     })
 
-    bot.send('sendMessage', {
-      chat_id: mess.chat.id,
-      text: mess.reply_to_message.from.first_name + ' è stato terminato.'
-    })
+
 
   }, 1000);
 })
+
+
+bot.registerModeratorCmd("/debug", (mess) => {
+    bot.send('sendMessage', {
+      chat_id: mess.chat.id,
+      text: JSON.stringify(mess.reply_to_message)
+    })
+})
+
 
 
 /*
  *  ADMIN COMMANDS
  */
 
+bot.registerAdminCmd("/flag", (mess) => {
+    
+    reason = mess.text.substring(6);
+    if(reason.length == 0)
+        return;
+    
+    if(!mess.reply_to_message)
+        return;
+    
+    iata.flagUser(mess.reply_to_message.from.id, mess.reply_to_message.from.username, mess.reply_to_message.from.first_name + " " + mess.reply_to_message.from.last_name, reason);
+     
+    bot.send('sendMessage', {
+      chat_id: mess.chat.id,
+      text: "k",
+    }, res => {})
+
+ })
+ 
+
+
+
+
+function printFlags(user, chatid){
+    iata.getUserFlags(user.id, (rows, err) => {
+        
+        if(rows.length==0)
+            return;
+                
+        message="Segnalazioni dell'utente @"+ user.username + " (" + user.id + ")\n\n" ;
+        
+        for (row in rows){
+            message+=" - " + rows[row].reason+"\n";
+        }
+        
+        bot.send('sendMessage', {
+            chat_id: chatid,
+            text: message,
+        }, res => {})
+    })
+}
+
+
+bot.registerAdminCmd("/getflags", (mess) => {
+
+    if(!mess.reply_to_message)
+        return;
+        
+    printFlags(mess.reply_to_message.from,mess.chat.id)
+    
+ })
+ 
+  
+bot.registerAdminCmd("/getallflags", (mess) => {
+     
+    iata.getAllFlags((rows, err) => {
+                
+        message="";
+        
+        for (row in rows){
+            message+="@"+rows[row].username+" "+rows[row].reason+"\n";
+        }
+        
+        bot.send('sendMessage', {
+        chat_id: mess.chat.id,
+        text: message,
+        }, res => {})
+    })
+
+ })
+ 
+ bot.registerAdminCmd("/clearflags", (mess) => {
+
+    iata.clearUserFlags(mess.reply_to_message.from.id, (rows, err) => {
+
+        bot.send('sendMessage', {
+        chat_id: mess.chat.id,
+        text: "k",
+        }, res => {})
+    })
+ })
+ 
+
 
  bot.registerAdminCmd("!gtfo", (mess) => {
-   exec(mess.text.substring(1), function callback(error, stdout, stderr) {
      bot.send('leaveChat', {
        chat_id: mess.chat.id,
      }, res => {})
-   });
  })
 
 
@@ -214,4 +311,30 @@ bot.registerAdminCmd("!cc", (mess) => {
 
 
 
-bot.start();
+bot.start((upd) =>{
+    if(upd.message.new_chat_members){
+        upd.message.new_chat_members.forEach((member)=>{
+            printFlags(member, upd.message.chat.id)
+        })
+        return;
+    }
+    
+    //fuck ignoranza fork
+    if(upd.message.forward_from_chat && upd.message.forward_from_chat.id == -1001056774476){ 
+        bot.send('deleteMessage', {
+        chat_id: upd.message.chat.id,
+        message_id: upd.message.message_id
+        }, res => {})
+        return;
+    }
+    if(upd.message.text.toLowerCase().indexOf("@ignuranzafork") !== -1 ||upd.message.text.toLowerCase().indexOf("t.me/ignuranzafork") !== -1 ){
+        bot.send('deleteMessage', {
+        chat_id: upd.message.chat.id,
+        message_id: upd.message.message_id
+        }, res => {})
+        return;
+    }
+    
+    
+    
+});
