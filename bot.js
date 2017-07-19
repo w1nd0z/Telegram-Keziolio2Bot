@@ -315,28 +315,30 @@ bot.registerAdminCmd("!cc", (mess) => {
 bot.start((upd) =>{
     
     try {
-    if(upd.message.new_chat_members){
-        upd.message.new_chat_members.forEach((member)=>{
-            printFlags(member, upd.message.chat.id)
-        })
-        return;
-    }
-    
-    //fuck ignoranza fork
-    if(upd.message.forward_from_chat && upd.message.forward_from_chat.id == -1001056774476){ 
-        bot.send('deleteMessage', {
-        chat_id: upd.message.chat.id,
-        message_id: upd.message.message_id
-        }, res => {})
-        return;
-    }
-    if(upd.message.text && ( upd.message.text.toLowerCase().indexOf("@ignuranzafork") !== -1 ||upd.message.text.toLowerCase().indexOf("t.me/ignuranzafork") !== -1 )){
-        bot.send('deleteMessage', {
-        chat_id: upd.message.chat.id,
-        message_id: upd.message.message_id
-        }, res => {})
-        return;
-    }
+        if(upd.message){
+            if(upd.message.new_chat_members){
+                upd.message.new_chat_members.forEach((member)=>{
+                    printFlags(member, upd.message.chat.id)
+                })
+                return;
+            }
+            
+            //fuck ignuranza fork
+            if(upd.message.forward_from_chat && upd.message.forward_from_chat.id == -1001056774476){ 
+                bot.send('deleteMessage', {
+                chat_id: upd.message.chat.id,
+                message_id: upd.message.message_id
+                }, res => {})
+                return;
+            }
+            if(upd.message.text && ( upd.message.text.toLowerCase().indexOf("@ignuranzafork") !== -1 ||upd.message.text.toLowerCase().indexOf("t.me/ignuranzafork") !== -1 )){
+                bot.send('deleteMessage', {
+                chat_id: upd.message.chat.id,
+                message_id: upd.message.message_id
+                }, res => {})
+                return;
+            }
+        }
     } catch(err){
         console.log(err)
     }
