@@ -322,22 +322,6 @@ bot.start((upd) =>{
                 })
                 return;
             }
-            
-            //fuck ignuranza fork
-            if(upd.message.forward_from_chat && upd.message.forward_from_chat.id == -1001056774476){ 
-                bot.send('deleteMessage', {
-                chat_id: upd.message.chat.id,
-                message_id: upd.message.message_id
-                }, res => {})
-                return;
-            }
-            if(upd.message.text && ( upd.message.text.toLowerCase().indexOf("@ignuranzafork") !== -1 ||upd.message.text.toLowerCase().indexOf("t.me/ignuranzafork") !== -1 )){
-                bot.send('deleteMessage', {
-                chat_id: upd.message.chat.id,
-                message_id: upd.message.message_id
-                }, res => {})
-                return;
-            }
         }
     } catch(err){
         console.log(err)
